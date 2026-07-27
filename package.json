@@ -1,0 +1,26 @@
+{
+  "name": "workforcenet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "coordinator": "tsx --env-file=.env src/coordinator/server.ts",
+    "worker:extract": "tsx --env-file=.env src/worker/run.ts extract 5001",
+    "worker:categorize": "tsx --env-file=.env src/worker/run.ts categorize 5002",
+    "worker:report": "tsx --env-file=.env src/worker/run.ts report 5003",
+    "balances": "tsx --env-file=.env src/gateway/checkBalances.ts",
+    "deposit": "tsx --env-file=.env src/gateway/deposit.ts",
+    "demo": "tsx --env-file=.env src/demo.ts"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pdf-parse": "^1.1.1",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.6.2"
+  }
+}
