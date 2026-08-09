@@ -1,5 +1,7 @@
 # WorkforceNet
 
+**Live pitch site:** https://workforcenet.vercel.app
+
 A coordinator agent splits an incoming job into subtasks. Worker agents bid
 for the work. The coordinator picks a winner, verifies the output, and pays
 the worker instantly in real testnet USDC via **Circle Gateway**, minting on
@@ -37,6 +39,18 @@ public testnets:
 This means **you need funded testnet wallets to run it end-to-end**. See
 Setup below.
 
+## Verified working
+
+A full end-to-end run has completed successfully — extraction, categorization,
+report generation, verification, and real on-chain settlement, three for three:
+
+- `0x3f9fdfd39ebc571f626803648092f3b24a9e4f953824d79c9a631d2343d259d5`
+- `0xdffd513d95ea2e971fbdba7d1171c7e4a599e25054bf46809995b2fc99c8554d`
+- `0xf85cf9a1429c25736be5940d80bf4361f07cd72a89b1fa7cf96d8f601d3b58f4`
+
+Check any of these on [Base Sepolia's explorer](https://sepolia.basescan.org)
+to confirm.
+
 ## Project layout
 
 ```
@@ -69,18 +83,27 @@ src/
 npm install
 ```
 
-Requires **Node.js 22.6+** (uses `--experimental-strip-types` to run
-TypeScript directly, no build step).
+Requires **Node.js 22.6+** (uses `tsx` to run TypeScript directly, no build
+step).
 
 ### 2. Get testnet funds
 
 - Get testnet USDC + native gas from the [Circle Faucet](https://faucet.circle.com)
   for **Arc Testnet** (the default source chain — USDC is Arc's native gas
   token, so one faucet claim covers both).
-- Generate a coordinator EVM keypair (e.g. `viem`'s `generatePrivateKey()`,
-  or any wallet) and fund that address from the faucet.
+- Get testnet ETH for **Base Sepolia** (the destination chain, used to pay
+  gas for the mint transaction) from a faucet such as the
+  [Coinbase Developer Platform Faucet](https://portal.cdp.coinbase.com/products/faucet).
+- Generate a coordinator EVM keypair (e.g. `viem`'s `generatePrivateKey()`)
+  and fund that address from both faucets above.
 - Generate one payout address per worker (these just receive funds — no
   private key needed by the worker process).
+
+> **Security note:** generate a fresh private key yourself and keep it out
+> of version control (`.env` is already gitignored). Never use a
+> well-known/test private key (e.g. `0x000...001`) for anything that will
+> hold real or testnet value — these are publicly known and actively
+> monitored by bots that sweep funds the instant they arrive.
 
 ### 3. Configure environment
 
@@ -114,6 +137,9 @@ Each worker self-registers with the coordinator on startup.
 
 ```bash
 npm run demo -- /absolute/path/to/doc1.pdf /absolute/path/to/doc2.pdf
+# ✓ paid worker (extract)     0.5 USDC   tx 0x3f9fdfd3...
+# ✓ paid worker (categorize)  0.5 USDC   tx 0xdffd513d...
+# ✓ paid worker (report)      0.5 USDC   tx 0xf85cf9a1...
 ```
 
 Watch the coordinator's logs for bidding, verification, and mint transaction

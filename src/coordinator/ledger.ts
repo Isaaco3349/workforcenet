@@ -3,9 +3,10 @@
 // visible, inspectable audit trail (data/ledger.json).
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Receipt } from "../types.js";
 
-const LEDGER_PATH = new URL("../../data/ledger.json", import.meta.url).pathname;
+const LEDGER_PATH = fileURLToPath(new URL("../../data/ledger.json", import.meta.url));
 
 interface LedgerState {
   reputation: Record<string, number>; // workerId -> score 0-100
